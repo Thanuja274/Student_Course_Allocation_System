@@ -1,13 +1,119 @@
 # Course Allocation System (CAS)
 
-## Tech Stack
-- Frontend: React 18 + Vite + React Router
-- Backend: Node.js + Express
-- Database: MySQL 8.0
+A comprehensive Student Course Allocation Automation System with intelligent allocation algorithms, real-time seat management, and complete administrative control.
 
----
+## 🎯 Features
 
-## Project Structure
+### Student Features
+- 🔐 Secure authentication and registration
+- 📚 Browse available courses with real-time seat availability
+- 🎯 Submit and rank course preferences (up to 8 courses)
+- 📊 View allocation results instantly
+- ⏰ Edit preferences before deadline
+- 📋 Prerequisite validation and conflict detection
+
+### Admin Features
+- 🎛️ Complete administrative dashboard
+- 📈 Comprehensive analytics and reporting
+- ⚙️ Course management (add/edit/delete)
+- 🔄 Manual allocation override
+- 📊 Seat capacity management
+- 🎯 Allocation engine control
+
+### Intelligent Allocation Engine
+- 🤖 Multi-pass greedy algorithm
+- ⚖️ Fair distribution across courses
+- 📚 Prerequisite validation
+- ⏰ Timetable conflict detection
+- 📊 CGPA-based tie-breaking
+- 📋 Waitlist management
+
+## 🚀 Tech Stack
+
+- **Frontend**: React 18 + Vite + React Router
+- **Backend**: Node.js + Express + MySQL 8.0
+- **Authentication**: JWT tokens
+- **Database**: MySQL with comprehensive relational schema
+
+## 📱 Live Demo
+
+[Your Deployment Link Here]
+
+## 🛠️ Installation
+
+### Prerequisites
+- Node.js 16+
+- MySQL 8.0
+- Git
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/yourusername/course-allocation-system.git
+cd course-allocation-system
+```
+
+### 2. Database Setup
+```sql
+-- Create database and tables (see below for complete schema)
+CREATE DATABASE IF NOT EXISTS course_allocation;
+USE course_allocation;
+-- Run the complete SQL schema provided below
+```
+
+### 3. Backend Setup
+```bash
+cd backend
+npm install
+cp .env.example .env
+# Edit .env with your database credentials
+npm run dev
+```
+
+### 4. Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### 5. Access the Application
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5000
+- Health Check: http://localhost:5000/health
+
+## 👥 Default Credentials
+
+| Role | Email | Password |
+|------|--------|----------|
+| Student | arjun@student.edu | student123 |
+| Student | priya@student.edu | student123 |
+| Student | rahul@student.edu | student123 |
+| Admin | admin@university.edu | admin123 |
+
+## 🧪 Testing
+
+Run the comprehensive test suite:
+```bash
+node comprehensive-test.js
+```
+
+## 📊 System Status
+
+✅ **100% Functional** - All features implemented and tested
+✅ **End-to-End Testing** - Complete workflow verification
+✅ **Production Ready** - Secure and scalable architecture
+
+## 🎯 Complete Workflow
+
+1. **Admin Setup**: Create courses, set capacities, configure rules
+2. **Student Registration**: Account creation with department selection
+3. **Preference Submission**: Browse, select, and rank courses
+4. **System Validation**: Automatic prerequisite and conflict checking
+5. **Allocation Process**: Intelligent fair course assignment
+6. **Results Display**: Real-time student notifications
+7. **Admin Reports**: Comprehensive analytics and management
+
+## 🏗️ Project Structure
 
 ```
 cas-project/

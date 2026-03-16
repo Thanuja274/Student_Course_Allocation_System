@@ -11,11 +11,31 @@ const register = async (req, res) => {
   try {
     const hash = await bcrypt.hash(password, 12);
     const [r] = await db.query(
-      `INSERT INTO users (name,email,password_hash,roll_number,department_id,current_year,cgpa)
-       VALUES (?,?,?,?,?,?,?)`,
+      `INSERT INTO users (name,email,password_hash,roll_number,department_id,current_year,cgpa,role)
+       VALUES (?,?,?,?,?,?,?,'student')`,
       [name, email, hash, roll_number, department_id, current_year, cgpa || 0]
     );
-    res.status(201).json({ message: 'Registered successfully', userId: r.insertId });
+    
+    // Get the newly created user with department name
+    const [rows] = await db.query(
+      `SELECT u.*, d.name AS department_name
+       FROM users u LEFT JOIN departments d ON d.id=u.department_id
+       WHERE u.id=?`, [r.insertId]
+    );
+    const user = rows[0];
+    
+    const token = jwt.sign(
+      { id: user.id, role: user.role, name: user.name, department_id: user.department_id },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+    
+    res.status(201).json({
+      token,
+      user: { id: user.id, name: user.name, email: user.email, role: user.role,
+              roll_number: user.roll_number, department_name: user.department_name,
+              current_year: user.current_year, cgpa: user.cgpa }
+    });
   } catch (err) {
     if (err.code === 'ER_DUP_ENTRY')
       return res.status(409).json({ error: 'Email or roll number already exists' });

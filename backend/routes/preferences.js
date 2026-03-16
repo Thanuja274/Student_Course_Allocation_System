@@ -26,9 +26,14 @@ router.post('/', authenticate, async (req, res) => {
     const sem = sems[0];
     if (new Date() > new Date(sem.preference_deadline))
       return res.status(400).json({ error: 'Preference submission deadline has passed' });
-    if (sem.allocation_done)
-      return res.status(400).json({ error: 'Allocation already done for this semester' });
     const semId = sem.id;
+    
+    // Check if student already has allocations for this semester
+    const [existingAllocations] = await db.query(
+      'SELECT COUNT(*) AS cnt FROM allocations WHERE student_id=? AND semester_id=?', [studentId, semId]
+    );
+    if (existingAllocations[0].cnt > 0)
+      return res.status(400).json({ error: 'You already have course allocations. Preferences cannot be modified after allocation.' });
 
     // Get student info
     const [students] = await db.query(
@@ -131,8 +136,12 @@ router.delete('/', authenticate, async (req, res) => {
     const [sems] = await db.query(
       'SELECT id, preference_deadline, allocation_done FROM semesters WHERE is_active=1 LIMIT 1'
     );
-    if (!sems.length) return res.status(400).json({ error: 'No active semester' });
-    if (sems[0].allocation_done) return res.status(400).json({ error: 'Allocation done, cannot modify' });
+    // Check if student already has allocations for this semester
+    const [existingAllocations] = await db.query(
+      'SELECT COUNT(*) AS cnt FROM allocations WHERE student_id=? AND semester_id=?', [req.user.id, sems[0].id]
+    );
+    if (existingAllocations[0].cnt > 0)
+      return res.status(400).json({ error: 'You already have course allocations. Preferences cannot be modified after allocation.' });
     if (new Date() > new Date(sems[0].preference_deadline))
       return res.status(400).json({ error: 'Deadline passed' });
     await db.query('DELETE FROM preferences WHERE student_id=? AND semester_id=?', [req.user.id, sems[0].id]);
